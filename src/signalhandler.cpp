@@ -20,7 +20,6 @@ SignalHandler::SignalHandler(QGraphicsScene* scene, int z_value) {
     MPHandler* mypaint = MPHandler::handler();
     connect(mypaint, SIGNAL(newTile(MPSurface*, MPTile*)), this, SLOT(onNewTile(MPSurface*, MPTile*)));
     connect(mypaint, SIGNAL(updateTile(MPSurface*, MPTile*)), this, SLOT(onUpdateTile(MPSurface*, MPTile*)));
-    connect(mypaint, SIGNAL(clearedSurface(MPSurface*)), this, SLOT(onClearedSurface(MPSurface*)));
 }
 
 SignalHandler::~SignalHandler() {

@@ -4,7 +4,55 @@
 %Import QtGui/QtGuimod.sip
 %Import QtWidgets/QtWidgetsmod.sip
 
-class SignalHandler;
+class MPTile : public QGraphicsItem
+{
+%TypeHeaderCode
+#include "../src/mptile.h"
+%End
+};
+
+typedef void MPSurface;
+typedef int MyPaintBrushSetting;
+
+class MPHandler : public QObject /NoDefaultCtors/
+{
+
+%TypeHeaderCode
+#include <../src/mphandler.h>
+%End
+
+public:
+
+    static MPHandler* handler();
+
+    void startStroke();
+    void strokeTo(float x, float y, float pressure, float xtilt, float ytilt);
+    void strokeTo(float x, float y);
+    void endStroke();
+
+    float getBrushValue(MyPaintBrushSetting setting);
+
+
+    void setBrushColor(QColor newColor);
+    void setBrushValue(MyPaintBrushSetting setting, float value);
+
+
+    void setSurfaceSize(QSize size);
+    QSize surfaceSize();
+    void clearSurface();
+    QImage renderImage();
+
+    void loadImage(const QImage &image);
+
+public slots:
+    void loadBrush(const QByteArray& content);
+
+signals:
+    void fakesignal();
+    void updateTile(MPSurface *surface, MPTile *tile);
+    void newTile(MPSurface *surface, MPTile *tile);
+    void clearedSurface(MPSurface *surface);
+};
 
 class MPBrushLib /NoDefaultCtors/
 {
@@ -28,6 +76,8 @@ public:
     static void load_image(const QImage& image);
     
     static QImage render_image();
+
+    static void clear_surface();
 
     static void start_stroke();
 
