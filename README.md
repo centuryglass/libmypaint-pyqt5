@@ -1,4 +1,9 @@
-# qtmypaint
+# pyqtBrushlib
+Integrates the libmypaint/brushlib library with PyQt5. Based on https://github.com/ethiccinema/qtmypaint, I've just added sip4 bindings and a slightly more Pythonic interface. This is a work in progress, I'll add additional information about building and using this project soon.
+
+
+
+## Original README.md text:
 
 qtmypaint is an interface to help integrate the libmypaint brush engine library within your QT based applications. (The example's GUI is based on a demo application made by Sebastien Leon)
 
