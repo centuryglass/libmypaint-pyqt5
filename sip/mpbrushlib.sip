@@ -1,16 +1,17 @@
-#ifndef MPBRUSHLIB_H
-#define MPBRUSHLIB_H
+%Module brushlib
 
-#include <QMap>
-#include <QString>
-#include <QSize>
-#include <QColor>
-#include <QGraphicsScene>
+%Import QtCore/QtCoremod.sip
+%Import QtGui/QtGuimod.sip
+%Import QtWidgets/QtWidgetsmod.sip
 
 class SignalHandler;
 
-class MPBrushLib
+class MPBrushLib /NoDefaultCtors/
 {
+%TypeHeaderCode
+#include <../src/mpbrushlib.h>
+%End
+
 public:
     static void add_to_scene(QGraphicsScene* scene, int z_value=-1);
 
@@ -27,8 +28,6 @@ public:
     static void load_image(const QImage& image);
     
     static QImage render_image();
-
-    static void clear_surface();
 
     static void start_stroke();
 
@@ -90,10 +89,4 @@ public:
     static float get_brush_value(BrushSetting valueType);
 
     static void set_brush_value(BrushSetting valueType, float value);
-
-private:
-    static SignalHandler* signalHandler;
-    static QString brushpath;
 };
-
-#endif // MPBRUSHLIB_H

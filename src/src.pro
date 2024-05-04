@@ -7,12 +7,16 @@ CONFIG += staticlib
 HEADERS += mpbrush.h \
            mphandler.h \
            mpsurface.h \
-           mptile.h
+           mptile.h \
+           signalhandler.h \
+           mpbrushlib.h
 
 SOURCES += mpbrush.cpp \
            mphandler.cpp \
            mpsurface.cpp \
-           mptile.cpp
+           mptile.cpp \
+           signalhandler.cpp \
+           mpbrushlib.cpp
 
 LIBS += -L../json-c -ljson-c
 LIBS += -L../libmypaint -llibmypaint
