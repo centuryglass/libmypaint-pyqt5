@@ -1,4 +1,4 @@
-/* brushlib - The MyPaint Brush Library
+/* libmypaint - The MyPaint Brush Library
  * Copyright (C) 2012 Jon Nordby <jononor@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
@@ -14,19 +14,19 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "config.h"
+
 #include "mypaint-brush-settings.h"
 
 #include <string.h>
 #include <assert.h>
-
-#define GETTEXT_PACKAGE "libmypaint"
 
 #ifdef HAVE_GETTEXT
   #include <libintl.h>
   #define N_(String) (String)
   #define  _(String) gettext (String)
 #else
-  #define dgettext(a,b) (a)
+  #define dgettext(Domain,String) (String)
   #define N_(String) (String)
   #define  _(String) (String)
 #endif // HAVE_GETTEXT
@@ -58,8 +58,7 @@ mypaint_brush_setting_info_get_tooltip(const MyPaintBrushSettingInfo *self)
 MyPaintBrushSetting
 mypaint_brush_setting_from_cname(const char *cname)
 {
-    int i;
-    for (i=0; i<MYPAINT_BRUSH_SETTINGS_COUNT; i++) {
+    for (int i=0; i<MYPAINT_BRUSH_SETTINGS_COUNT; i++) {
         MyPaintBrushSetting id = (MyPaintBrushSetting)i;
         if (strcmp(mypaint_brush_setting_info(id)->cname, cname) == 0) {
             return id;
@@ -79,20 +78,19 @@ mypaint_brush_input_info(MyPaintBrushInput id)
 const gchar *
 mypaint_brush_input_info_get_name(const MyPaintBrushInputInfo *self)
 {
-    return dgettext(self->name, GETTEXT_PACKAGE);
+    return dgettext(GETTEXT_PACKAGE, self->name);
 }
 
 const gchar *
 mypaint_brush_input_info_get_tooltip(const MyPaintBrushInputInfo *self)
 {
-    return dgettext(self->tooltip, GETTEXT_PACKAGE);
+    return dgettext(GETTEXT_PACKAGE, self->tooltip);
 }
 
 MyPaintBrushInput
 mypaint_brush_input_from_cname(const char *cname)
 {
-    int i;
-    for (i=0; i<MYPAINT_BRUSH_INPUTS_COUNT; i++) {
+    for (int i=0; i<MYPAINT_BRUSH_INPUTS_COUNT; i++) {
         MyPaintBrushInput id = (MyPaintBrushInput)i;
         if (strcmp(mypaint_brush_input_info(id)->cname, cname) == 0) {
             return id;

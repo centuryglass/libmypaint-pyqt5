@@ -13,11 +13,4 @@
 #define MYPAINT_MAX_MIPMAP_LEVEL 4
 #endif
 
-// Start generated config
-#define MYPAINT_CONFIG_USE_GLIB 0
-
-// End generated config
-
-#define HAVE_JSON_C
-
-#endif // MYPAINTCONFIG_H
+#endif /* MYPAINTCONFIG_H */

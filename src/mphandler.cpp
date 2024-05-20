@@ -35,6 +35,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define DEFAULT_BRUSHES_PATH ":brushes"
 
+// TODO: Find ideal buffer size, this value is arbitrary:
+#define RECTANGLE_BUF_SIZE 100
+
 bool MPHandler::instanceFlag = false;
 MPHandler* MPHandler::currentHandler = NULL;
 
@@ -143,8 +146,13 @@ MPHandler::strokeTo(float x, float y, float pressure, float xtilt, float ytilt)
 {
     float dtime = 1.0/10;
     mypaint_surface_begin_atomic((MyPaintSurface *)m_surface);
-    mypaint_brush_stroke_to(m_brush->brush, (MyPaintSurface *)m_surface, x, y, pressure, xtilt, ytilt, dtime);
-    MyPaintRectangle roi;
+    mypaint_brush_stroke_to(m_brush->brush, (MyPaintSurface *)m_surface, x, y, pressure, xtilt, ytilt, dtime,
+            1.0, 0.0, 0.0, true);
+
+    static MyPaintRectangle rectangle_buf [RECTANGLE_BUF_SIZE];
+    MyPaintRectangles roi;
+    roi.rectangles = rectangle_buf;
+    roi.num_rectangles = RECTANGLE_BUF_SIZE;
     mypaint_surface_end_atomic((MyPaintSurface *)m_surface, &roi);
 }
 

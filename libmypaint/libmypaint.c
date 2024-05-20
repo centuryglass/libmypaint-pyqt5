@@ -3,13 +3,11 @@
  * Note that still need to do -I./path/to/libmypaint/sources
  * for the includes here to succeed. */
 
-#include "mapping.c"
 #include "helpers.c"
 #include "brushmodes.c"
 #include "fifo.c"
 #include "operationqueue.c"
 #include "rng-double.c"
-#include "utils.c"
 #include "tilemap.c"
 
 #include "mypaint.c"
@@ -19,3 +17,6 @@
 #include "mypaint-surface.c"
 #include "mypaint-tiled-surface.c"
 #include "mypaint-rectangle.c"
+#include "mypaint-symmetry.c"
+#include "mypaint-matrix.c"
+#include "mypaint-mapping.c"

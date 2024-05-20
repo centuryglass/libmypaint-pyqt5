@@ -58,3 +58,7 @@ Info.plist
 release
 debug
 ipch
+
+# Python and sip
+*.pyc
+sip/src

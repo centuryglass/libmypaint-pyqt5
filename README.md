@@ -1,4 +1,4 @@
-# pyqtBrushlib
+# libmypaint-pyqt5
 Integrates the libmypaint/brushlib library with PyQt5. Based on https://github.com/ethiccinema/qtmypaint, I've just added sip4 bindings and a slightly more Pythonic interface. This is a work in progress, I'll add additional information about building and using this project soon.
 
 

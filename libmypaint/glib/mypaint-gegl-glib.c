@@ -1,9 +1,12 @@
-#include <mypaint-config.h>
+#include "config.h"
+#include "mypaint-config.h"
 
 #if MYPAINT_CONFIG_USE_GLIB
 
 #include <glib-object.h>
 #include <stdio.h>
+
+#include "mypaint-surface.h"
 
 GType
 mypaint_gegl_tiled_surface_get_type (void)

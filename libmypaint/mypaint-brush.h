@@ -1,7 +1,7 @@
 #ifndef MYPAINTBRUSH_H
 #define MYPAINTBRUSH_H
 
-/* brushlib - The MyPaint Brush Library
+/* libmypaint - The MyPaint Brush Library
  * Copyright (C) 2008 Martin Renold <martinxyz@gmx.ch>
  * Copyright (C) 2012 Jon Nordby <jononor@gmail.com>
  *
@@ -18,18 +18,19 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <mypaint-glib-compat.h>
-#include <mypaint-surface.h>
-#include <mypaint-brush-settings.h>
+#include "mypaint-config.h"
+#include "mypaint-surface.h"
+#include "mypaint-brush-settings.h"
 
 G_BEGIN_DECLS
 
-typedef struct _MyPaintBrush MyPaintBrush;
-
-#include <glib/mypaint-brush.h>
+typedef struct MyPaintBrush MyPaintBrush;
 
 MyPaintBrush *
 mypaint_brush_new(void);
+
+MyPaintBrush *
+mypaint_brush_new_with_buckets(int num_smudge_buckets);
 
 void
 mypaint_brush_unref(MyPaintBrush *self);
@@ -44,7 +45,8 @@ mypaint_brush_new_stroke(MyPaintBrush *self);
 
 int
 mypaint_brush_stroke_to(MyPaintBrush *self, MyPaintSurface *surface, float x, float y,
-                        float pressure, float xtilt, float ytilt, double dtime);
+                        float pressure, float xtilt, float ytilt, double dtime, float viewzoom,
+                        float viewrotation, float barrel_rotation, gboolean linear);
 
 void
 mypaint_brush_set_base_value(MyPaintBrush *self, MyPaintBrushSetting id, float value);
@@ -75,6 +77,24 @@ mypaint_brush_get_state(MyPaintBrush *self, MyPaintBrushState i);
 
 void
 mypaint_brush_set_state(MyPaintBrush *self, MyPaintBrushState i, float value);
+
+gboolean
+mypaint_brush_set_smudge_bucket_state(
+    MyPaintBrush* self, int bucket_index,
+    float r, float g, float b, float a,
+    float prev_r, float prev_g, float prev_b, float prev_a,
+    float prev_color_recentness);
+
+gboolean
+mypaint_brush_get_smudge_bucket_state(
+    const MyPaintBrush* self, int bucket_index,
+    float* r, float* g, float* b, float* a,
+    float* prev_r, float* prev_g, float* prev_b, float* prev_a,
+    float* prev_color_recentness);
+
+int mypaint_brush_get_min_smudge_bucket_used(const MyPaintBrush* self);
+
+int mypaint_brush_get_max_smudge_bucket_used(const MyPaintBrush* self);
 
 double
 mypaint_brush_get_total_stroke_painting_time(MyPaintBrush *self);

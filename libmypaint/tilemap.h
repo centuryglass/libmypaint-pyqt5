@@ -1,4 +1,4 @@
-/* brushlib - The MyPaint Brush Library
+/* libmypaint - The MyPaint Brush Library
  * Copyright (C) 2012 Jon Nordby <jononor@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
@@ -17,7 +17,11 @@
 #ifndef TILEMAP_H
 #define TILEMAP_H
 
-#include <mypaint-glib-compat.h>
+#if MYPAINT_CONFIG_USE_GLIB
+#include <glib.h>
+#else // not MYPAINT_CONFIG_USE_GLIB
+#include "mypaint-glib-compat.h"
+#endif
 
 G_BEGIN_DECLS
 

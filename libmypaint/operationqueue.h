@@ -14,14 +14,18 @@ typedef struct {
     float color_a;
     float opaque;
     float hardness;
+    float softness;
     float aspect_ratio;
     float angle;
     float normal;
     float lock_alpha;
     float colorize;
+    float posterize;
+    float posterize_num;
+    float paint;
 } OperationDataDrawDab;
 
-typedef struct _OperationQueue OperationQueue;
+typedef struct OperationQueue OperationQueue;
 
 OperationQueue *operation_queue_new(void);
 void operation_queue_free(OperationQueue *self);

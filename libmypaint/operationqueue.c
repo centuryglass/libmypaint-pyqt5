@@ -1,4 +1,4 @@
-/* brushlib - The MyPaint Brush Library
+/* libmypaint - The MyPaint Brush Library
  * Copyright (C) 2012 Jon Nordby <jononor@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
@@ -14,15 +14,21 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "config.h"
 
 #include <stdlib.h>
 #include <assert.h>
 
-#include <mypaint-glib-compat.h>
+#if MYPAINT_CONFIG_USE_GLIB
+#include <glib.h>
+#else // not MYPAINT_CONFIG_USE_GLIB
+#include "mypaint-glib-compat.h"
+#endif
+
 #include "operationqueue.h"
 #include "fifo.h"
 
-struct _OperationQueue {
+struct OperationQueue {
     TileMap *tile_map;
 
     TileIndex *dirty_tiles;
@@ -40,7 +46,7 @@ operation_delete_func(void *user_data) {
 
 void
 free_fifo(void *item) {
-    Fifo *op_queue = (Fifo*)item;
+    Fifo *op_queue = (Fifo*) item;
     if (op_queue) {
         fifo_free(op_queue, operation_delete_func);
     }
@@ -67,8 +73,7 @@ operation_queue_resize(OperationQueue *self, int new_size)
 
         if (self->tile_map) {
             tile_map_copy_to(self->tile_map, new_tile_map);
-            int i;
-            for(i = 0; i < self->dirty_tiles_n; i++) {
+            for(int i = 0; i < self->dirty_tiles_n; i++) {
                 new_dirty_tiles[i] = self->dirty_tiles[i];
             }
 
@@ -201,7 +206,7 @@ operation_queue_add(OperationQueue *self, TileIndex index, OperationDataDrawDab 
 }
 
 /* Pop an operation off the queue for tile @index
- * The user of this function is reponsible for freeing the result using free()
+ * The user of this function is responsible for freeing the result using free()
  *
  * Concurrency: This function is reentrant (and lock-free) on different @index */
 OperationDataDrawDab *

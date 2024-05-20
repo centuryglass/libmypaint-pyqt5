@@ -1,4 +1,4 @@
-/* brushlib - The MyPaint Brush Library
+/* libmypaint - The MyPaint Brush Library
  * Copyright (C) 2012 Jon Nordby <jononor@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
@@ -14,6 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "config.h"
+
 #include <stdlib.h>
 #include <assert.h>
 
@@ -28,9 +30,8 @@ tile_map_new(int size, size_t item_size, TileMapItemFreeFunc item_free_func)
     self->item_size = item_size;
     self->item_free_func = item_free_func;
     const int map_size = 2*self->size*2*self->size;
-    self->map = (void**)malloc(map_size*self->item_size);
-    int i;
-    for(i = 0; i < map_size; i++) {
+    self->map = (void**) malloc(map_size*self->item_size);
+    for(int i = 0; i < map_size; i++) {
         self->map[i] = NULL;
     }
 
@@ -42,8 +43,7 @@ tile_map_free(TileMap *self, gboolean free_items)
 {
     const int map_size = 2*self->size*2*self->size;
     if (free_items) {
-        int i;
-        for(i = 0; i < map_size; i++) {
+        for(int i = 0; i < map_size; i++) {
             self->item_free_func(self->map[i]);
         }
     }
@@ -71,10 +71,8 @@ tile_map_copy_to(TileMap *self, TileMap *other)
 {
     assert(other->size >= self->size);
 
-    int y;
-    for(y = -self->size; y < self->size; y++) {
-        int x;
-        for(x = -self->size; x < self->size; x++) {
+    for(int y = -self->size; y < self->size; y++) {
+        for(int x = -self->size; x < self->size; x++) {
             TileIndex index = {x, y};
             *tile_map_get(other, index) = *tile_map_get(self, index);
         }

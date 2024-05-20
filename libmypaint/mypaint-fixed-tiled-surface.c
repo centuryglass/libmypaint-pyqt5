@@ -4,10 +4,16 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <mypaint-fixed-tiled-surface.h>
+#include "config.h"
+
+#if MYPAINT_CONFIG_USE_GLIB
+#include <glib.h>
+#endif
+
+#include "mypaint-fixed-tiled-surface.h"
 
 
-struct _MyPaintFixedTiledSurface {
+struct MyPaintFixedTiledSurface {
     MyPaintTiledSurface parent;
 
     size_t tile_size; // Size (in bytes) of single tile
@@ -113,7 +119,8 @@ mypaint_fixed_tiled_surface_new(int width, int height)
 
     uint16_t * buffer = (uint16_t *)malloc(buffer_size);
     if (!buffer) {
-        fprintf(stderr, "CRITICAL: unable to allocate enough memory: %Zu bytes", buffer_size);
+        fprintf(stderr, "CRITICAL: unable to allocate enough memory: %zu bytes", buffer_size);
+        free(self);
         return NULL;
     }
     memset(buffer, 255, buffer_size);

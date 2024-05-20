@@ -1,4 +1,4 @@
-/* brushlib - The MyPaint Brush Library
+/* libmypaint - The MyPaint Brush Library
  * Copyright (C) 2007-2008 Martin Renold <martinxyz@gmx.ch>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
@@ -17,10 +17,16 @@
 #ifndef MAPPING_C
 #define MAPPING_C
 
+#include "config.h"
+
 #include <stdlib.h>
 #include <assert.h>
 
-#include "mapping.h"
+#if MYPAINT_CONFIG_USE_GLIB
+#include <glib.h>
+#endif
+
+#include "mypaint-mapping.h"
 
 #include "helpers.h"
 
@@ -29,12 +35,12 @@
 
 typedef struct {
   // a set of control points (stepwise linear)
-  float xvalues[8];
-  float yvalues[8];
+  float xvalues[64];
+  float yvalues[64];
   int n;
 } ControlPoints;
 
-struct _Mapping {
+struct MyPaintMapping {
     float base_value; // FIXME: accessed directly from mypaint-brush.c
 
     int inputs;
@@ -44,10 +50,10 @@ struct _Mapping {
 };
 
 
-Mapping *
-mapping_new(int inputs_)
+MyPaintMapping *
+mypaint_mapping_new(int inputs_)
 {
-    Mapping *self = (Mapping *)malloc(sizeof(Mapping));
+    MyPaintMapping *self = (MyPaintMapping *)malloc(sizeof(MyPaintMapping));
 
     self->inputs = inputs_;
     self->pointsList = (ControlPoints *)malloc(sizeof(ControlPoints)*self->inputs);
@@ -61,26 +67,26 @@ mapping_new(int inputs_)
 }
 
 void
-mapping_free(Mapping *self)
+mypaint_mapping_free(MyPaintMapping *self)
 {
     free(self->pointsList);
     free(self);
 }
 
-float mapping_get_base_value(Mapping *self)
+float mypaint_mapping_get_base_value(MyPaintMapping *self)
 {
     return self->base_value;
 }
 
-void mapping_set_base_value(Mapping *self, float value)
+void mypaint_mapping_set_base_value(MyPaintMapping *self, float value)
 {
     self->base_value = value;
 }
 
-void mapping_set_n (Mapping * self, int input, int n)
+void mypaint_mapping_set_n (MyPaintMapping * self, int input, int n)
 {
     assert (input >= 0 && input < self->inputs);
-    assert (n >= 0 && n <= 8);
+    assert (n >= 0 && n <= 64);
     assert (n != 1); // cannot build a linear mapping with only one point
     ControlPoints * p = self->pointsList + input;
 
@@ -93,17 +99,17 @@ void mapping_set_n (Mapping * self, int input, int n)
 }
 
 
-int mapping_get_n (Mapping * self, int input)
+int mypaint_mapping_get_n (MyPaintMapping * self, int input)
 {
     assert (input >= 0 && input < self->inputs);
     ControlPoints * p = self->pointsList + input;
     return p->n;
 }
 
-void mapping_set_point (Mapping * self, int input, int index, float x, float y)
+void mypaint_mapping_set_point (MyPaintMapping * self, int input, int index, float x, float y)
 {
     assert (input >= 0 && input < self->inputs);
-    assert (index >= 0 && index < 8);
+    assert (index >= 0 && index < 64);
     ControlPoints * p = self->pointsList + input;
     assert (index < p->n);
 
@@ -115,10 +121,10 @@ void mapping_set_point (Mapping * self, int input, int index, float x, float y)
     p->yvalues[index] = y;
 }
 
-void mapping_get_point (Mapping * self, int input, int index, float *x, float *y)
+void mypaint_mapping_get_point (MyPaintMapping * self, int input, int index, float *x, float *y)
 {
     assert (input >= 0 && input < self->inputs);
-    assert (index >= 0 && index < 8);
+    assert (index >= 0 && index < 64);
     ControlPoints * p = self->pointsList + input;
     assert (index < p->n);
 
@@ -126,18 +132,18 @@ void mapping_get_point (Mapping * self, int input, int index, float *x, float *y
     *y = p->yvalues[index];
 }
 
-gboolean mapping_is_constant(Mapping * self)
+gboolean mypaint_mapping_is_constant(MyPaintMapping * self)
 {
     return self->inputs_used == 0;
 }
 
 int
-mapping_get_inputs_used_n(Mapping *self)
+mypaint_mapping_get_inputs_used_n(MyPaintMapping *self)
 {
     return self->inputs_used;
 }
 
-float mapping_calculate (Mapping * self, float * data)
+float mypaint_mapping_calculate (MyPaintMapping * self, float * data)
 {
     int j;
     float result;
@@ -168,7 +174,7 @@ float mapping_calculate (Mapping * self, float * data)
           y1 = p->yvalues[i];
         }
 
-        if (x0 == x1) {
+        if (x0 == x1 || y0 == y1) {
           y = y0;
         } else {
           // linear interpolation
@@ -181,10 +187,10 @@ float mapping_calculate (Mapping * self, float * data)
     return result;
 }
 
-// used in python for the global pressure mapping
-float mapping_calculate_single_input (Mapping * self, float input)
+// used in mypaint itself for the global pressure mapping
+float mypaint_mapping_calculate_single_input (MyPaintMapping * self, float input)
 {
     assert(self->inputs == 1);
-    return mapping_calculate(self, &input);
+    return mypaint_mapping_calculate(self, &input);
 }
 #endif //MAPPING_C
